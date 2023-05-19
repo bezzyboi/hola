@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jump Game</title>
+    <style>
+        canvas {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="800" height="600"></canvas>
+    <script>
+        // Get the canvas element
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Game variables
+        let playerX = 100;
+        let playerY = canvas.height - 100;
+        let playerWidth = 50;
+        let playerHeight = 50;
+        let jumpHeight = 100;
+        let isJumping = false;
+        let jumpCount = 0;
+        const jumpLimit = 2;
+
+        // Keyboard state
+        const keys = {};
+
+        // Keyboard event listeners
+        window.addEventListener('keydown', (event) => {
+            keys[event.key] = true;
+        });
+
+        window.addEventListener('keyup', (event) => {
+            keys[event.key] = false;
+        });
+
+        // Game loop
+        function gameLoop() {
+            // Update
+            if (keys['ArrowUp']) {
+                if (!isJumping) {
+                    isJumping = true;
+                }
+            }
+
+            if (isJumping) {
+                if (jumpCount < jumpLimit) {
+                    playerY -= 5;
+                    jumpCount++;
+                } else {
+                    isJumping = false;
+                    jumpCount = 0;
+                }
+            } else {
+                if (playerY + playerHeight < canvas.height) {
+                    playerY += 5;
+                }
+            }
+
+            // Clear the canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw the player
+            ctx.fillStyle = 'blue';
+            ctx.fillRect(playerX, playerY, playerWidth, playerHeight);
+
+            // Request animation frame
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Game start
+        function startGame() {
+            requestAnimationFrame(gameLoop);
+        }
+
+        // Start the game
+        startGame();
+    </script>
+</body>
+</html>
